@@ -33,6 +33,8 @@ resumeFile.addEventListener('change', async (e) => {
 			text = await extractWordText(file);
 		}
 
+    console.log(text)
+
 		// Extract information
 		const extractedData = extractResumeInfo(text);
 
@@ -76,7 +78,10 @@ function extractResumeInfo(text) {
 
 	// Extract name (first matching pattern)
 	const nameMatch = text.match(patterns.name);
-	extractedData.name = nameMatch ? nameMatch[0] : '';
+	extractedData.name = nameMatch ? nameMatch[0] : text.split(' ').slice(0,2).join(' ');
+
+  extractedData.firstName = extractedData.name ? extractedData.name.split(' ')[0] : '';
+  extractedData.lastName = extractedData.name ? extractedData.name.split(' ')[1] : '';
 
 	// Extract email
 	const emailMatch = text.match(patterns.email);
@@ -105,11 +110,14 @@ function extractResumeInfo(text) {
 function autoFillForm(data) {
 	// Map extracted data to form fields
 	document.getElementById('fullName').value = data.name || '';
+  document.getElementById('firstName').value = data.firstName || '';
+  document.getElementById('lastName').value = data.lastName || '';
 	document.getElementById('email').value = data.email || '';
 	document.getElementById('phone').value = data.phone || '';
 	document.getElementById('education').value = data.education || '';
 	document.getElementById('workExperience').value = data.workExperience || '';
 	document.getElementById('skills').value = data.skills || '';
+
 }
 
 // Form submission handler
